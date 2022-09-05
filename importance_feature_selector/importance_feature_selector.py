@@ -4,12 +4,13 @@ import pandas as pd
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.model_selection import KFold
 from sklearn.base import clone
-
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from typing import Union
 class ImportanceFeatureSelector(BaseEstimator, TransformerMixin):
 
     def __init__(
             self, 
-            estimator, 
+            estimator:Union[RandomForestClassifier, RandomForestRegressor, None]=None, 
             norm:bool=True, 
             rand:bool=True, 
             exp:bool=True, 
@@ -61,7 +62,6 @@ class ImportanceFeatureSelector(BaseEstimator, TransformerMixin):
         kf = KFold(n_splits=n_splits)
 
         feature_importances = []
-
         for train_index, test_index in kf.split(X):
             X_train, X_test = X.iloc[train_index], X.iloc[test_index]
             y_train, y_test = y[train_index], y[test_index]
@@ -78,6 +78,13 @@ class ImportanceFeatureSelector(BaseEstimator, TransformerMixin):
 
 
     def fit(self, X, y):
+
+        # if y has more unique values than a third of its size then is regression task
+        if not self.estimator:
+            if np.unique(y)>(y.shape[0]//3):
+                self.estimator = RandomForestRegressor()
+            else:
+                self.estimator = RandomForestClassifier()
 
         if not isinstance(X, pd.DataFrame):
             raise Exception("X must be a pandas DataFrame object")

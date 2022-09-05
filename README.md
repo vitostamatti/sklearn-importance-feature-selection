@@ -23,10 +23,18 @@ To get started, clone this repo and check that you have all requirements install
 
 ```
 git clone https://github.com/vitostamatti/sklearn-importance-feature-selection.git
+pip install .
 ``` 
 
 ## Usage <a name = "usage"></a>
 
+```
+from importance_feature_selector import ImportanceFeatureSelector
+
+selector = ImportanceFeatureSelector()
+X_selected = selector.fit_transform(X, y)
+
+```
 
 In the [notebooks](/notebooks/) directory you can find examples.
 
