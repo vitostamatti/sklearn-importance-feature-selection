@@ -10,7 +10,7 @@ class ImportanceFeatureSelector(BaseEstimator, TransformerMixin):
 
     def __init__(
             self, 
-            estimator:Union[RandomForestClassifier, RandomForestRegressor, None]=None, 
+            estimator:Union[RandomForestClassifier, RandomForestRegressor, None] = None, 
             norm:bool=True, 
             rand:bool=True, 
             exp:bool=True, 
@@ -80,7 +80,7 @@ class ImportanceFeatureSelector(BaseEstimator, TransformerMixin):
     def fit(self, X, y):
 
         # if y has more unique values than a third of its size then is regression task
-        if not self.estimator:
+        if self.estimator == None:
             if np.unique(y)>(y.shape[0]//3):
                 self.estimator = RandomForestRegressor()
             else:
